@@ -16,12 +16,12 @@ public class CompleteTaskUseCase : ICompleteTaskUseCase
     public async Task<TaskItem> ExecuteAsync(CompleteTaskDTO taskToComplete)
     {
         var task = await _taskRepository.GetByIdAsync(taskToComplete.Id);
+
         if (task == null)
         {
             throw new Exception("Task not found");
         }
 
-        task.MarkAsCompleted();
         return await _taskRepository.UpdateAsync(task);
     }
 }

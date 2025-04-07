@@ -26,7 +26,17 @@ public class TaskRepository : ITaskRepository
 
     public Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        TaskItem taskItem = _context.Tasks.FirstOrDefault(t => t.Id == id);
+
+        if (taskItem != null) 
+        {
+            _context.Tasks.Remove(taskItem);
+            return _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new Exception("Task not found");
+        }
     }
 
     public async Task<IEnumerable<TaskItem>> GetAllAsync()
@@ -36,11 +46,37 @@ public class TaskRepository : ITaskRepository
 
     public Task<TaskItem> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        TaskItem taskItem = _context.Tasks.FirstOrDefault(t => t.Id == id);
+
+        if (taskItem == null)
+        {
+            throw new Exception("Task not found");
+        }
+        else
+        {
+            return Task.FromResult(taskItem);
+        }
     }
 
-    public Task<TaskItem> UpdateAsync(TaskItem task)
+    public async Task<TaskItem> UpdateAsync(TaskItem task)
     {
-        throw new NotImplementedException();
+        var taskItem = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == task.Id);
+
+        if (taskItem != null)
+        {
+
+            if (!task.IsCompleted)
+            {
+                taskItem.MarkAsCompleted();
+            }
+
+            await _context.SaveChangesAsync();
+
+            return taskItem;
+        }
+        else
+        {
+            throw new Exception("Task not found");
+        }
     }
 }

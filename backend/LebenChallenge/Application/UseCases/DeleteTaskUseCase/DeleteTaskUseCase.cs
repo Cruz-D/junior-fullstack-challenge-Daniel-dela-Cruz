@@ -14,6 +14,8 @@ public class DeleteTaskUseCase : IDeleteTaskUseCase
 
     public Task ExecuteAsync(DeleteTaskDTO taskToDelete)
     {
-        throw new NotImplementedException("DeleteTaskUseCase is not implemented yet.");
+ 
+        return _taskRepository.DeleteAsync(taskToDelete.Id);
+        
     }
 }
