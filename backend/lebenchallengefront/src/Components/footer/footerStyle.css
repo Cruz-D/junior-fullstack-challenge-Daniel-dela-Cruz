@@ -1,0 +1,16 @@
+.footer {
+    background-color: #f8f9fa; /* Fondo claro */
+    border-top: 1px solid #dee2e6; /* Línea superior */
+    color: #6c757d; /* Texto gris */
+}
+
+.footer a {
+    color: #007bff; /* Azul Bootstrap */
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer a:hover {
+    color: #0056b3; /* Azul más oscuro */
+    text-decoration: underline;
+}

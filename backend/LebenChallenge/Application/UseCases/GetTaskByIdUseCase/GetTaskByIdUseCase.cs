@@ -12,26 +12,23 @@ public class GetTaskByIdUseCase : IGetTaskByIdUseCase
         _taskRepository = taskRepository;
     }
 
-    public Task<TaskItem> ExecuteAsync(int id)
+    public async Task<TaskItem> ExecuteAsync(int id)
     {
-
+        // validate the id
         if (id <= 0)
         {
-            throw new ArgumentException("Task ID cannot be zero.");
+            throw new ArgumentException("Task ID cannot be zero or negative.");
         }
-        else
+
+        try
         {
-            try
-            {
-                return _taskRepository.GetByIdAsync(id);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                throw new Exception("An error occurred while retrieving the task.", ex);
-
-            }
+            // get the task by id
+            return await _taskRepository.GetByIdAsync(id);
         }
-
+        catch (Exception ex)
+        {
+            
+            throw new Exception("An error occurred while retrieving the task.", ex);
+        }
     }
 }

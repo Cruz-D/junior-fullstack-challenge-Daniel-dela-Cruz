@@ -1,0 +1,40 @@
+/* Estilo general del contenedor del paginador */
+.pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para los botones del paginador */
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    color: #007bff; /* Azul Bootstrap */
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+/* Hover para los botones */
+.page-link:hover {
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+/* Botón activo */
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Botón deshabilitado */
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
