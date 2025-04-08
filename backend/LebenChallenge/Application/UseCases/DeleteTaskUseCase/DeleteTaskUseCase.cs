@@ -14,7 +14,7 @@ public class DeleteTaskUseCase : IDeleteTaskUseCase
 
     public Task ExecuteAsync(DeleteTaskDTO taskToDelete)
     {
- 
+        //sends the task to delete to the repository
         return _taskRepository.DeleteAsync(taskToDelete.Id);
         
     }

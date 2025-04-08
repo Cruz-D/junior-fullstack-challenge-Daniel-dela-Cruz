@@ -15,6 +15,7 @@ public class CompleteTaskUseCase : ICompleteTaskUseCase
 
     public async Task<TaskItem> ExecuteAsync(CompleteTaskDTO taskToComplete)
     {
+        // get task using id
         var task = await _taskRepository.GetByIdAsync(taskToComplete.Id);
 
         if (task == null)
@@ -22,6 +23,7 @@ public class CompleteTaskUseCase : ICompleteTaskUseCase
             throw new Exception("Task not found");
         }
 
-        return await _taskRepository.UpdateAsync(task);
+        // get task using id and bool true for complete the task
+        return await _taskRepository.UpdateAsync(task, true);
     }
 }

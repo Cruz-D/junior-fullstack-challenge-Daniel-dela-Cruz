@@ -15,13 +15,18 @@ public class TaskItemController : ControllerBase
     private readonly ICompleteTaskUseCase _completeTaskUseCase;
     private readonly IGetTaskByIdUseCase _getTaskByIdUseCase;
     private readonly IDeleteTaskUseCase _deleteTaskUseCase;
+    private readonly IUpdateTaskUseCase _updateTaskUseCase;
+    private readonly ISetPriorityUseCase _setTaskPriorityUseCase;
 
     public TaskItemController(
+
         ICreateTaskUseCase createTaskUseCase,
         ICompleteTaskUseCase completeTaskUseCase,
         IGetAllTasksUseCase getAllTasksUseCase,
         IGetTaskByIdUseCase getTaskByIdUseCase,
-        IDeleteTaskUseCase deleteTaskUseCase
+        IDeleteTaskUseCase deleteTaskUseCase,
+        IUpdateTaskUseCase updateTaskUseCase,
+        ISetPriorityUseCase setTaskPriorityUseCase
 
     )
     {
@@ -30,6 +35,8 @@ public class TaskItemController : ControllerBase
         _getAllTasksUseCase = getAllTasksUseCase;
         _getTaskByIdUseCase = getTaskByIdUseCase;
         _deleteTaskUseCase = deleteTaskUseCase;
+        _updateTaskUseCase = updateTaskUseCase;
+        _setTaskPriorityUseCase = setTaskPriorityUseCase;
     }
 
     [HttpGet]
@@ -107,20 +114,43 @@ public class TaskItemController : ControllerBase
         }
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromBody] UpdateTaskDTO dto, int id)
+    {
+        // check the id param
+        if (id == 0)
+        {
+            return BadRequest("Task ID cannot be zero or negative.");
+        }
+
+        try
+        {
+            //sends de DTO strucure body content and task id to the use case
+            await _updateTaskUseCase.ExecuteAsync(dto, id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while updating the task: {ex.Message}");
+        }
+    }
+
 
     [HttpPut("{id}/complete")]
-    public async Task<IActionResult> Complete(int id)
+    public async Task<IActionResult> Complete(CompleteTaskDTO dto, int id)
     {
         // check the id param
         if (id <= 0)
         {
             return BadRequest("Task ID cannot be zero or negative.");
         }
-        
+
         try
         {
+            dto.Id = id; 
+
             // get the task by id to complete by id param
-            var taskToComplete = await _completeTaskUseCase.ExecuteAsync(new CompleteTaskDTO { Id = id });
+            var taskToComplete = await _completeTaskUseCase.ExecuteAsync(dto);
 
             // check if the task exists
             if (taskToComplete == null)
@@ -139,6 +169,31 @@ public class TaskItemController : ControllerBase
 
             throw new Exception("An error occurred while completing the task.", ex);
         }
-        
+
     }
+
+    [HttpPut("{id}/priority")]
+    public async Task<IActionResult> Priority([FromBody] PriorityTaskDTO dto, int id)
+    {
+        if (id == 0)
+        {
+            return BadRequest("Task ID cannot be zero or negative.");
+        }
+
+        try
+        {
+            //sends de DTO strucure body content and task id to the use case
+            await _setTaskPriorityUseCase.ExecuteAsync(dto, id);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while updating the task: {ex.Message}");
+        }
+
+
+
+    }
+
 }

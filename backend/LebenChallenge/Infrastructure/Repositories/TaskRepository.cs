@@ -16,7 +16,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem> AddAsync(TaskItem task)
     {
-        TaskItem taskItem = new TaskItem(task.Name, task.Description, task.DueDate);
+        TaskItem taskItem = new TaskItem(task.Name, task.Description, task.DueDate, task?.Priority);
         _context.Tasks.Add(taskItem);
 
         await _context.SaveChangesAsync();
@@ -58,25 +58,40 @@ public class TaskRepository : ITaskRepository
         }
     }
 
-    public async Task<TaskItem> UpdateAsync(TaskItem task)
+    public async Task<TaskItem> UpdateAsync(TaskItem task, bool? isCompleted, int? priority)
     {
+        //get the task to update
         var taskItem = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == task.Id);
 
-        if (taskItem != null)
+        if (taskItem == null)
         {
+            throw new Exception("Task not found");
+        }
 
-            if (!task.IsCompleted)
+        try
+        {
+            // check the boolean value to update the task
+            if (isCompleted.HasValue || isCompleted == false)
             {
                 taskItem.MarkAsCompleted();
             }
+            // check the priority value to update the task
+            if (priority.HasValue)
+            {
+                taskItem.SetPriority((TaskItem.priorityRange)priority);
+            }
+
+            //update the task
+            _context.Tasks.Update(taskItem);
 
             await _context.SaveChangesAsync();
 
             return taskItem;
         }
-        else
+        catch (Exception ex)
         {
-            throw new Exception("Task not found");
+            throw new Exception("An error occurred while updating the task", ex);
         }
     }
+
 }

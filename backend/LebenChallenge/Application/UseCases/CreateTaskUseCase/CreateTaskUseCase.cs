@@ -15,7 +15,7 @@ public class CreateTaskUseCase : ICreateTaskUseCase
 
     public async Task<TaskItem> ExecuteAsync(CreateTaskDTO taskToCreate)
     {
-        var task = new TaskItem(taskToCreate.Name, taskToCreate.Description, taskToCreate.DueDate);
+        var task = new TaskItem(taskToCreate.Name, taskToCreate.Description, taskToCreate.DueDate, null);
         return await _taskRepository.AddAsync(task);
     }
 }
