@@ -1,0 +1,23 @@
+# Establecer la imagen base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["LebenChallenge/LebenChallenge.csproj", "LebenChallenge/"]
+# Asegúrate de que la ruta al archivo lebenchallengefront.esproj sea correcta
+COPY ["lebenchallengefront/lebenchallengefront.esproj", "lebenchallengefront/"]
+RUN dotnet restore "LebenChallenge/LebenChallenge.csproj"
+COPY . .
+WORKDIR "/src/LebenChallenge"
+RUN dotnet build "LebenChallenge.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "LebenChallenge.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+EXPOSE 80
+ENTRYPOINT ["dotnet", "LebenChallenge.dll"]

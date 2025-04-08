@@ -2,17 +2,21 @@ version: '3.8'
 
 services:
   backend:
-    image: lebenchallenge-backend
     build:
-      context: ./LebenChallenge
+      context: .
       dockerfile: dockerfile
+    image: lebenchallenge-backend
     ports:
       - "5000:80"
-    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - frontend
+
   frontend:
-    image: lebenchallenge-frontend
     build:
       context: ./lebenchallengefront
       dockerfile: dockerfile
+    image: lebenchallenge-frontend
     ports:
       - "3000:80"
