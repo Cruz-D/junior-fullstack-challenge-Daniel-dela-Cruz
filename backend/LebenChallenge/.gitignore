@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# Visual Studio
+.vs/
+
 # User-specific files
 *.rsuser
 *.suo

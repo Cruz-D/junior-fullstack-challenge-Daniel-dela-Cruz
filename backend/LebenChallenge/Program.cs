@@ -23,12 +23,15 @@ builder.Services.AddDbContext<InMemoryDbContext>(options =>
     options.UseInMemoryDatabase("LebenChallengeDb")
 );
 
-builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddScoped<IGetAllTasksUseCase, GetAllTasksUseCase>();
-builder.Services.AddScoped<IGetTaskByIdUseCase, GetTaskByIdUseCase>();
-builder.Services.AddScoped<ICompleteTaskUseCase, CompleteTaskUseCase>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>(); 
+
+builder.Services.AddScoped<IUpdateTaskUseCase, UpdateTaskUseCase>();
 builder.Services.AddScoped<ICreateTaskUseCase, CreateTaskUseCase>();
+builder.Services.AddScoped<IGetAllTasksUseCase, GetAllTasksUseCase>();
+builder.Services.AddScoped<ICompleteTaskUseCase, CompleteTaskUseCase>();
+builder.Services.AddScoped<IGetTaskByIdUseCase, GetTaskByIdUseCase>();
 builder.Services.AddScoped<IDeleteTaskUseCase, DeleteTaskUseCase>();
+builder.Services.AddScoped<ISetPriorityUseCase, SetPriorityUseCase>();
 
 var app = builder.Build();
 

@@ -16,7 +16,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem> AddAsync(TaskItem task)
     {
-        TaskItem taskItem = new TaskItem(task.Name, task.Description, task.DueDate);
+        TaskItem taskItem = new TaskItem(task.Name, task.Description, task.DueDate, task?.Priority);
         _context.Tasks.Add(taskItem);
 
         await _context.SaveChangesAsync();
@@ -26,7 +26,17 @@ public class TaskRepository : ITaskRepository
 
     public Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        TaskItem taskItem = _context.Tasks.FirstOrDefault(t => t.Id == id);
+
+        if (taskItem != null) 
+        {
+            _context.Tasks.Remove(taskItem);
+            return _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new Exception("Task not found");
+        }
     }
 
     public async Task<IEnumerable<TaskItem>> GetAllAsync()
@@ -36,11 +46,52 @@ public class TaskRepository : ITaskRepository
 
     public Task<TaskItem> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        TaskItem taskItem = _context.Tasks.FirstOrDefault(t => t.Id == id);
+
+        if (taskItem == null)
+        {
+            throw new Exception("Task not found");
+        }
+        else
+        {
+            return Task.FromResult(taskItem);
+        }
     }
 
-    public Task<TaskItem> UpdateAsync(TaskItem task)
+    public async Task<TaskItem> UpdateAsync(TaskItem task, bool? isCompleted, int? priority)
     {
-        throw new NotImplementedException();
+        //get the task to update
+        var taskItem = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == task.Id);
+
+        if (taskItem == null)
+        {
+            throw new Exception("Task not found");
+        }
+
+        try
+        {
+            // check the boolean value to update the task
+            if (isCompleted.HasValue || isCompleted == false)
+            {
+                taskItem.MarkAsCompleted();
+            }
+            // check the priority value to update the task
+            if (priority.HasValue)
+            {
+                taskItem.SetPriority((TaskItem.priorityRange)priority);
+            }
+
+            //update the task
+            _context.Tasks.Update(taskItem);
+
+            await _context.SaveChangesAsync();
+
+            return taskItem;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("An error occurred while updating the task", ex);
+        }
     }
+
 }

@@ -12,8 +12,23 @@ public class GetTaskByIdUseCase : IGetTaskByIdUseCase
         _taskRepository = taskRepository;
     }
 
-    public Task<TaskItem> ExecuteAsync(int id)
+    public async Task<TaskItem> ExecuteAsync(int id)
     {
-        throw new NotImplementedException("GetTaskByIdUseCase is not implemented yet.");
+        // validate the id
+        if (id <= 0)
+        {
+            throw new ArgumentException("Task ID cannot be zero or negative.");
+        }
+
+        try
+        {
+            // get the task by id
+            return await _taskRepository.GetByIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            
+            throw new Exception("An error occurred while retrieving the task.", ex);
+        }
     }
 }
