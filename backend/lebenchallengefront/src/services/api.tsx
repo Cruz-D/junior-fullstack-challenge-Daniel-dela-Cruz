@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //const API_URL ="http://backend:80/api/TaskItem"; // For Docker deployment
-const API_URL = "http://localhost:5000/api/TaskItem"; // For local development
+const API_URL = "https://localhost:5000/api/TaskItem"; // For local development
 
 
 
